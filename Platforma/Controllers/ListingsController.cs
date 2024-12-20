@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Platforma.Data;
 using Platforma.Models;
 using System;
+using System.Linq;
 
 namespace Platforma.Controllers
 {
@@ -15,17 +16,18 @@ namespace Platforma.Controllers
         {
             _context = context;
         }
-        
+
         // Список объявлений
         public IActionResult Index()
         {
-            var listings = _context.Listings.ToList();
+            var listings = _context.Listings.Include(l => l.Location).ToList();
             return View(listings);
         }
 
         // Создание объявления
         public IActionResult Create()
         {
+            ViewBag.Locations = new SelectList(_context.Locations, "Id", "Name");
             return View();
         }
 
@@ -37,59 +39,13 @@ namespace Platforma.Controllers
                 listing.PublishedAt = DateTime.Now;
                 _context.Listings.Add(listing);
                 _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(listing);
-        }
-
-        // Редактирование объявления
-        public IActionResult Edit(int id)
-        {
-            var listing = _context.Listings.Find(id);
-            if (listing == null) return NotFound();
-            return View(listing);
-        }
-
-        [HttpGet]
-        public IActionResult GetListingsByCity(int cityId)
-        {
-            var listings = _context.Listings.Where(l => l.LocationId == cityId).ToList();
-            return PartialView("_ListingsTable", listings); 
-        }
-
-
-        [HttpPost]
-        public IActionResult Edit(Listing listing)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Listings.Update(listing);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(listing);
-        }
-        [HttpGet]
-        public IActionResult Create()
-        {
-            ViewBag.Locations = new SelectList(_context.Locations, "Id", "Name");
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Listing listing)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Listings.Add(listing);
-                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Locations = new SelectList(_context.Locations, "Id", "Name");
             return View(listing);
         }
-        [HttpGet]
+
+        // Редактирование объявления
         public IActionResult Edit(int id)
         {
             var listing = _context.Listings.Find(id);
@@ -102,34 +58,34 @@ namespace Platforma.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(Listing listing)
+        public IActionResult Edit(int id, Listing listing)
         {
+            if (id != listing.Id)
+            {
+                return BadRequest();
+            }
+
             if (ModelState.IsValid)
             {
-                _context.Listings.Update(listing);
+                _context.Update(listing);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Locations = new SelectList(_context.Locations, "Id", "Name", listing.LocationId);
             return View(listing);
         }
+
         // Удаление объявления
         public IActionResult Delete(int id)
         {
             var listing = _context.Listings.Find(id);
-            if (listing == null) return NotFound();
+            if (listing == null)
+            {
+                return NotFound();
+            }
             _context.Listings.Remove(listing);
             _context.SaveChanges();
-            return RedirectToAction("Index");
-        }
-        public IActionResult ByCategory(int categoryId)
-        {
-            var listings = _context.Listings
-                .Where(l => l.Item.Categories.Any(c => c.Id == categoryId))
-                .ToList();
-            return View("Index", listings);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
-
