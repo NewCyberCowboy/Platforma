@@ -5,11 +5,6 @@ VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Platforma", "Platforma\Platforma.csproj", "{EB8F8FFF-7276-42C1-9C00-48D40C84CF84}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{56D60829-52A3-4D27-9868-346AEF954B86}"
-	ProjectSection(SolutionItems) = preProject
-		AppDbContext.cs = AppDbContext.cs
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
