@@ -50,6 +50,14 @@ namespace Platforma.Controllers
             return View(listing);
         }
 
+        [HttpGet]
+        public IActionResult GetListingsByCity(int cityId)
+        {
+            var listings = _context.Listings.Where(l => l.LocationId == cityId).ToList();
+            return PartialView("_ListingsTable", listings); 
+        }
+
+
         [HttpPost]
         public IActionResult Edit(Listing listing)
         {
