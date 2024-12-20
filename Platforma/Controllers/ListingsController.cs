@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Platforma.Data;
 using Platforma.Models;
 using System;
@@ -14,7 +15,7 @@ namespace Platforma.Controllers
         {
             _context = context;
         }
-
+        
         // Список объявлений
         public IActionResult Index()
         {
