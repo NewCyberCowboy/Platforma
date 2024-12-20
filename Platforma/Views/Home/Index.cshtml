@@ -1,0 +1,35 @@
+﻿@model Platforma.ViewModels.HomeViewModel
+
+@section Title {
+    Главная
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>Новые объявления</h2>
+        <div class="list-group">
+            @foreach (var listing in Model.Listings)
+            {
+                <a href="/Listings/Details/@listing.Id" class="list-group-item list-group-item-action">
+                    <h5>@listing.Title</h5>
+                    <p>@listing.Description</p>
+                    <span class="text-muted">Цена: @listing.Price ₽</span>
+                </a>
+            }
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h2>Отзывы</h2>
+        <ul class="list-group">
+            @foreach (var review in Model.Reviews)
+            {
+                <li class="list-group-item">
+                    <strong>@review.ReviewText</strong>
+                    <br />
+                    <span class="text-muted">Рейтинг: @review.Rating/5</span>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+

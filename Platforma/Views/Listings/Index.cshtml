@@ -1,0 +1,60 @@
+﻿@model IEnumerable<platforma.Models.Listing>
+
+<div>
+    <h1>Объявления</h1>
+    <label for="city-selector">Выберите город:</label>
+    <select id="city-selector">
+        <option value="">-- Все города --</option>
+    </select>
+</div>
+
+<div id="listings-container">
+    @foreach (var listing in Model)
+    {
+        <div class="listing-item">
+            <h3>@listing.Title</h3>
+            <p>@listing.Description</p>
+            <p>Цена: @listing.Price руб.</p>
+            <p>Город: @listing.Location?.Name</p>
+            <a href="/Listings/Edit/@listing.Id">Редактировать</a>
+        </div>
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Загрузка списка городов
+        $.getJSON('/Listings/GetCities', function (data) {
+            var citySelector = $('#city-selector');
+            $.each(data, function (index, city) {
+                citySelector.append($('<option>', {
+                    value: city,
+                    text: city
+                }));
+            });
+        });
+
+        // Обновление списка объявлений при выборе города
+        $('#city-selector').on('change', function () {
+            var selectedCity = $(this).val();
+            $.getJSON('/Listings/GetListingsByCity', { city: selectedCity }, function (data) {
+                var listingsContainer = $('#listings-container');
+                listingsContainer.empty();
+                if (data.length === 0) {
+                    listingsContainer.append('<p>Нет объявлений для выбранного города.</p>');
+                } else {
+                    $.each(data, function (index, listing) {
+                        listingsContainer.append(`
+                            <div class="listing-item">
+                                <h3>${listing.title}</h3>
+                                <p>${listing.description}</p>
+                                <p>Цена: ${listing.price} руб.</p>
+                                <p>Город: ${listing.city}</p>
+                            </div>
+                        `);
+                    });
+                }
+            });
+        });
+    });
+</script>
