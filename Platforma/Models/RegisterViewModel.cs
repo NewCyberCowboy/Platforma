@@ -17,6 +17,6 @@ namespace Platforma.Models
         [Compare("Password", ErrorMessage = "Пароли не совпадают")]
         public string ConfirmPassword { get; set; }
     }
-
+}
    
 

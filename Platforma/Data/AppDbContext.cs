@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Platforma.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Platforma.Data
 {
     public class AppDbContext : IdentityDbContext<IdentityUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-        {
+      
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
